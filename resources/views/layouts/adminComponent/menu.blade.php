@@ -10,8 +10,8 @@
       </span>
     </a>
     <ul class="treeview-menu">
-      <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i>List</a></li>
-      <li><a href="index2.html"><i class="fa fa-circle-o"></i>Add new category</a></li>
+      <li class="active"><a href="{!! url('/admin/category') !!}"><i class="fa fa-circle-o"></i>List</a></li>
+      <li><a href="{!! url('/admin/category/create') !!}"><i class="fa fa-circle-o"></i>Add new category</a></li>
     </ul>
   </li>
 
@@ -23,8 +23,8 @@
       </span>
     </a>
     <ul class="treeview-menu">
-      <li><a href="index.html"><i class="fa fa-circle-o"></i>List</a></li>
-      <li class=""><a href="index2.html"><i class="fa fa-circle-o"></i>Add new product</a></li>
+      <li><a href="{!! url('admin/product') !!}"><i class="fa fa-circle-o"></i>List</a></li>
+      <li class=""><a href="{!! url('admin/product/create') !!}"><i class="fa fa-circle-o"></i>Add new product</a></li>
     </ul>
   </li>
  

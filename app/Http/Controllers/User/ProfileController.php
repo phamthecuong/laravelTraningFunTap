@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -14,7 +15,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        
+        return view('user.index');
     }
 
     /**
@@ -35,7 +36,15 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = User::findOrFail(\Auth::user()->id);
+        $user->name = $request->username;
+        $user->email = $request->email;
+        if (!empty($request->password)) {
+            $user->password = \Hash::make($request->password);
+        }
+        $user->save();
+        \Auth::logout();
+        return redirect('/userLogin');
     }
 
     /**
@@ -57,8 +66,7 @@ class ProfileController extends Controller
      */
     public function edit($id)
     {
-        $user  = User::find($id);
-        return view('user.profile', ['user' => $user]);
+
     }
 
     /**
@@ -70,7 +78,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**

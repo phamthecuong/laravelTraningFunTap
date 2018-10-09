@@ -1,22 +1,36 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Ajax;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 
-class LoginController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
-
     public function index()
     {
-        return view('user.login');
+        $product = \DB::table('product')->select('id', 'name', 'description', 'img', 'categoryId', 'created_at', 'updated_at')->get();
+        return \DataTables::of($product)
+            ->addColumn('image', function($ct){
+                return view('templates.image', ['url'=>$ct->img])->render();
+            })
+            ->addColumn('action', function($ct){
+              $actionEdit = 'product/'.$ct->id.'/edit';
+              $actionDelete = 'product/'.$ct->id;
+              return
+                   '<form method="get" action="'.$actionEdit.'">
+                        <button type="submit" class="btn btn-xs btn-info">Edit</button>
+                         <a href="/admin/product/delete/'.$ct->id.'" class="btn btn-xs btn-danger"><i class="fa fa-eraser"></i> Delete</a>
+                   </form>';
+            })
+            ->rawColumns(['action', 'image'])
+            ->make(true);
     }
 
     /**
@@ -26,7 +40,7 @@ class LoginController extends Controller
      */
     public function create()
     {
-        return "create";
+        //
     }
 
     /**
@@ -37,18 +51,7 @@ class LoginController extends Controller
      */
     public function store(Request $request)
     {
-        // Create the array using the values from the session
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
-
-        // Attempt to login the user
-        if (\Auth::attempt($credentials)) {
-            return redirect('/admin/category');
-        }
-
-        return redirect()->back();
+        //
     }
 
     /**
@@ -71,7 +74,6 @@ class LoginController extends Controller
     public function edit($id)
     {
         //
-        return "edit";
     }
 
     /**
@@ -84,7 +86,6 @@ class LoginController extends Controller
     public function update(Request $request, $id)
     {
         //
-        return "update";
     }
 
     /**
@@ -96,11 +97,5 @@ class LoginController extends Controller
     public function destroy($id)
     {
         //
-        return "destroy";
-    }
-
-    public function logout() {
-        \Auth::logout();
-        return redirect('/userLogin');
     }
 }

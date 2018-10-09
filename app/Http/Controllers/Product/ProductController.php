@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Product;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Category;
 
-class LoginController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
-
     public function index()
     {
-        return view('user.login');
+        return view('product.index');
     }
 
     /**
@@ -26,7 +26,8 @@ class LoginController extends Controller
      */
     public function create()
     {
-        return "create";
+        $category = Category::select('id', 'name')->get();
+        return view('product.add', ['category' => $category]);
     }
 
     /**
@@ -36,19 +37,20 @@ class LoginController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        // Create the array using the values from the session
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
-
-        // Attempt to login the user
-        if (\Auth::attempt($credentials)) {
-            return redirect('/admin/category');
+    {   
+        $product = new Product();
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->categoryId = $request->categoryId;
+        if($request->hasfile('img'))
+        {
+            $file = $request->file('img');
+            $name = time().$file->getClientOriginalName();
+            $file->move(public_path().'/images/', $name);
         }
-
-        return redirect()->back();
+        $product->img = $name;
+        $product->save();
+        return redirect('admin/product');
     }
 
     /**
@@ -70,8 +72,8 @@ class LoginController extends Controller
      */
     public function edit($id)
     {
-        //
-        return "edit";
+        $product = Product::find($id);
+        return view('product.edit', ['product' => $product]);
     }
 
     /**
@@ -84,7 +86,6 @@ class LoginController extends Controller
     public function update(Request $request, $id)
     {
         //
-        return "update";
     }
 
     /**
@@ -95,12 +96,7 @@ class LoginController extends Controller
      */
     public function destroy($id)
     {
-        //
-        return "destroy";
-    }
-
-    public function logout() {
-        \Auth::logout();
-        return redirect('/userLogin');
+         $product = Product::find($id)->delete();
+         return redirect('admin/product');
     }
 }

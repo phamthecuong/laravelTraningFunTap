@@ -1,22 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Ajax;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
-class LoginController extends Controller
+use App\Models\Category;
+use DataTables;
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
-
     public function index()
     {
-        return view('user.login');
+        $category = \DB::table('category')->select('id', 'name', 'created_at', 'updated_at')->get();
+        return \DataTables::of($category)
+            ->addColumn('action', function($ct){
+              $actionEdit = 'category/'.$ct->id.'/edit';
+              $actionDelete = 'category/'.$ct->id;
+              return
+                   '<form method="get" action="'.$actionEdit.'">
+                        <button type="submit" class="btn btn-xs btn-info">Edit</button>
+                         <a href="/admin/category/delete/'.$ct->id.'" class="btn btn-xs btn-danger"><i class="fa fa-eraser"></i> Delete</a>
+                   </form>';
+            })
+            ->make(true);
     }
 
     /**
@@ -26,7 +36,7 @@ class LoginController extends Controller
      */
     public function create()
     {
-        return "create";
+        //
     }
 
     /**
@@ -37,18 +47,7 @@ class LoginController extends Controller
      */
     public function store(Request $request)
     {
-        // Create the array using the values from the session
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
-
-        // Attempt to login the user
-        if (\Auth::attempt($credentials)) {
-            return redirect('/admin/category');
-        }
-
-        return redirect()->back();
+        //
     }
 
     /**
@@ -71,7 +70,6 @@ class LoginController extends Controller
     public function edit($id)
     {
         //
-        return "edit";
     }
 
     /**
@@ -84,7 +82,6 @@ class LoginController extends Controller
     public function update(Request $request, $id)
     {
         //
-        return "update";
     }
 
     /**
@@ -96,11 +93,5 @@ class LoginController extends Controller
     public function destroy($id)
     {
         //
-        return "destroy";
-    }
-
-    public function logout() {
-        \Auth::logout();
-        return redirect('/userLogin');
     }
 }
