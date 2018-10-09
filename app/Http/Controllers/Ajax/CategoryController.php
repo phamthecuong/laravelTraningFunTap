@@ -19,12 +19,8 @@ class CategoryController extends Controller
         return \DataTables::of($category)
             ->addColumn('action', function($ct){
               $actionEdit = 'category/'.$ct->id.'/edit';
-              $actionDelete = 'category/'.$ct->id;
-              return
-                   '<form method="get" action="'.$actionEdit.'">
-                        <button type="submit" class="btn btn-xs btn-info">Edit</button>
-                         <a href="/admin/category/delete/'.$ct->id.'" class="btn btn-xs btn-danger"><i class="fa fa-eraser"></i> Delete</a>
-                   </form>';
+              $urlDelete = 'category/delete/'.$ct->id;
+                return view("templates.action", ['actionEdit' => $actionEdit, 'url' => $urlDelete ] );
             })
             ->make(true);
     }

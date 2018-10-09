@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Http\Requests\productRequest;
 
 class ProductController extends Controller
 {
@@ -36,7 +37,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(productRequest $request)
     {   
         $product = new Product();
         $product->name = $request->name;
@@ -47,10 +48,10 @@ class ProductController extends Controller
             $file = $request->file('img');
             $name = time().$file->getClientOriginalName();
             $file->move(public_path().'/images/', $name);
+            $product->img = $name;
         }
-        $product->img = $name;
         $product->save();
-        return redirect('admin/product');
+        return redirect('admin/product')->with('message', 'Create successful');
     }
 
     /**
@@ -72,8 +73,9 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::find($id);
-        return view('product.edit', ['product' => $product]);
+        $category = Category::all();
+        $product = Product::with('category')->find(1);
+        return view('product.edit', ['product' => $product, 'category' => $category]);
     }
 
     /**
@@ -83,9 +85,21 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(productRequest $request, $id)
     {
-        //
+        $product = Product::find($id);
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->categoryId = $request->categoryId;
+        if($request->hasfile('img'))
+        {
+            $file = $request->file('img');
+            $name = time().$file->getClientOriginalName();
+            $file->move(public_path().'/images/', $name);
+            $product->img = $name;
+        }
+        $product->save();
+        return redirect('admin/product')->with('message', 'Update successful');
     }
 
     /**
@@ -96,7 +110,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-         $product = Product::find($id)->delete();
-         return redirect('admin/product');
+        $product = Product::find($id)->delete();
+        return redirect('admin/product')->with('message', 'Delete successful');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Category;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\categoryRequest;
 use App\Models\Category;
 class CategoryController extends Controller
 {
@@ -33,12 +34,12 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(categoryRequest $request)
     {
        $category = new Category();
        $category->name = $request->name;
        $category->save();
-       return redirect('/admin/category');
+       return redirect('/admin/category')->with('message', 'Create successful');
     }
 
     /**
@@ -70,12 +71,12 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(categoryRequest $request, $id)
     {
         $category = Category::findOrFail($id);
         $category->name = $request->name;
         $category->save();
-        return redirect('/admin/category');
+        return redirect('/admin/category')->with('message', 'Update successful');
     }
 
     /**
@@ -86,8 +87,11 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::with('product')->findOrFail($id);
+        if ($category->product->count() > 0) {
+            return redirect()->back()->with('message', 'Category have product, not delete');
+        }
         $category->delete();
-        return redirect('/admin/category');
+        return redirect('/admin/category')->with('message', 'Delete successful');
     }
 }

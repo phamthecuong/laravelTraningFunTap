@@ -13,6 +13,9 @@
       <!-- /.box-header -->
       <div class="box-body">
         <div class="row">
+          @if(Session::has('message'))
+            @include('templates.alert',['message' =>  Session::get('message')])
+          @endif
           <table class="table table-hover table-bordered table-striped datatable" style="width:100%">
             <thead>
                 <tr>
@@ -20,6 +23,7 @@
                   <th>Name</th>
                   <th>Description</th>
                   <th>Image</th>
+                  <th>Category name</th>
                   <th>Updated_at</th>
                   <th>Creted_at</th>
                   <th>Action</th>
@@ -45,6 +49,7 @@
                 {data: 'name', name: 'name'},
                 {data: 'description', name: 'description'},
                 {data: 'image', name: 'image'},
+                {data: 'categoryName', name: 'categoryName'},
                 {data: 'created_at', name: 'created_at'},
                 {data: 'updated_at', name: 'updated_at'},
                 {data: 'action', name: 'action'}

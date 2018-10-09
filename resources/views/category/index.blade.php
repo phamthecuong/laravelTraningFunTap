@@ -9,10 +9,14 @@
           <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
           </button>
         </div>
+
       </div>
       <!-- /.box-header -->
       <div class="box-body">
         <div class="row">
+          @if(Session::has('message'))
+            @include('templates.alert',['message' =>  Session::get('message')])
+          @endif
           <table class="table table-hover table-bordered table-striped datatable" style="width:100%">
             <thead>
                 <tr>

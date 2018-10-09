@@ -3,8 +3,9 @@
 @section('content')
 
     <div class="box">
-      <form class="form-horizontal" method="POST" action='{!! url("/admin/category") !!}'>
+      <form class="form-horizontal" method="POST" action='{!! url("/admin/product/$product->id") !!}'>
         @csrf
+        <input type="hidden" name="_method" value="PUT" />
         <div class="box-header with-border">
           <h3 class="box-title">Edit product</h3>
           <div class="box-tools pull-right">
@@ -20,13 +21,23 @@
                 <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-6">
                   <input type="text" name="name" class="form-control" id="inputEmail3" placeholder="Category name" value="{{$product->name}}">
+                  @if ($errors->has('name'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('name') }}</strong>
+                        </span>
+                    @endif
                 </div>
               </div>
 
               <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Decription</label>
                 <div class="col-sm-6">
-                  <input type="text" name="name" class="form-control" id="inputEmail3" placeholder="Decription" value="{{$product->description}}">
+                  <input type="text" name="description" class="form-control" id="inputEmail3" placeholder="Decription" value="{{$product->description}}">
+                  @if ($errors->has('description'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('description') }}</strong>
+                        </span>
+                    @endif
                 </div>
               </div>
 
@@ -34,15 +45,31 @@
                 <label for="inputEmail3" class="col-sm-2 control-label">Image</label>
                 <div class="col-sm-6">
                     <input type="file" name="img">
+                    @if ($errors->has('img'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('img') }}</strong>
+                        </span>
+                    @endif
                 </div>
               </div>
 
                <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Category type</label>
                 <div class="col-sm-6">
-                  <select>
-                    <option>Chose category name</option>
+                  <select name="categoryId">
+                    @foreach($category as $c)
+                      @if ($product->categoryId == $c->id)
+                        <option selected value="{{$c->id}}">{{$c->name}}</option>
+                      @else
+                        <option  value="{{$c->id}}">{{$c->name}}</option>
+                      @endif
+                    @endforeach
                   </select>
+                    @if ($errors->has('categoryId'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('categoryId') }}</strong>
+                        </span>
+                    @endif
                 </div>
               </div>
 

@@ -20,6 +20,11 @@
                 <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-6">
                   <input type="text" name="name" class="form-control" id="inputEmail3" placeholder="Category name">
+                    @if ($errors->has('name'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('name') }}</strong>
+                        </span>
+                    @endif
                 </div>
               </div>
             </div>

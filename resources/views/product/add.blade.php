@@ -20,6 +20,11 @@
                 <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-6">
                   <input type="text" name="name" class="form-control" id="inputEmail3" placeholder="Category name">
+                  @if ($errors->has('name'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('name') }}</strong>
+                        </span>
+                  @endif
                 </div>
               </div>
 
@@ -27,6 +32,11 @@
                 <label for="inputEmail3" class="col-sm-2 control-label">Decription</label>
                 <div class="col-sm-6">
                   <input type="text" name="description" class="form-control" id="inputEmail3" placeholder="Description">
+                  @if ($errors->has('description'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('description') }}</strong>
+                        </span>
+                    @endif
                 </div>
               </div>
 
@@ -34,6 +44,11 @@
                 <label for="inputEmail3" class="col-sm-2 control-label">Image</label>
                 <div class="col-sm-6">
                   	<input type="file" name="img">
+                     @if ($errors->has('img'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('img') }}</strong>
+                        </span>
+                    @endif
                 </div>
               </div>
 
@@ -41,7 +56,6 @@
                 <label for="inputEmail3" class="col-sm-2 control-label">Category type</label>
                 <div class="col-sm-6">
                   <select name="categoryId">
-                  	<option value="0">Chose category name</option>
                   	@foreach($category as $c)
                   		<option value="{{$c->id}}">{{$c->name}}</option>
                   	@endforeach
